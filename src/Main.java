@@ -21,14 +21,38 @@ public class Main {
     };
     public static void main(String[] args) {
 
-        //Item ironplate = new Item("Iron Bar",new Item("Iron Ingot"));
-        //Item superironplate = new Item("Super Iron Bar",ironplate);
-        //Item thiccPlate = new Item("Thiccc plate", new Item[]{ironplate, superironplate});
-        Item ironIngot = new Item("Iron Ingot",new Item("Iron Ore"));
-        Item ironPlate = new Item("Iron Plate",ironIngot);
-        Item ironRod = new Item("Iron Rod",ironIngot);
-        Item portableMiner = new Item("Portable Miner",new Item[]{ironPlate,ironRod});
-        //todo:: amount "3x IronIngot"
+        //IRON RELATED
+        Item ironOre = new Item("Iron Ore");
+        Item ironIngot = new Item("Iron Ingot",ironOre,1.0);
+        Item ironPlate = new Item("Iron Plate",ironIngot,1.5);
+        Item ironRod = new Item("Iron Rod",ironIngot,1.0);
+        Item portableMiner = new Item("Portable Miner",new Item[]{ironPlate,ironRod},new Double[]{2.0,4.0});
+        Item screws = new Item("Screws",ironRod,0.25);
+        Item reinforcedIronPlate = new Item("Reinforced Iron Plate",new Item[]{ironPlate,screws},new Double[]{6.0,12.0});
+        Item modularFrame = new Item("Modular Frame", new Item[]{reinforcedIronPlate, ironRod}, new Double[]{3.0, 12.0});
+        Item rotor = new Item("Rotor", new Item[]{ironRod, screws}, new Double[]{5.0, 25.0});
+
+        //COPPER RELATED
+        Item copperOre = new Item("Copper Ore");
+        Item copperIngot = new Item("Copper Ingot",copperOre,1.0);
+        Item wire = new Item("Copper Wire",copperIngot,0.5);
+        Item cable = new Item("Cable",wire,2.0);
+
+        //STEEL
+        Item coal = new Item("Coal");
+        Item steelIngot = new Item("Steel Ingot", new Item[]{ironOre, coal}, new Double[]{1.0,1.0});
+        Item steelPipe = new Item("Steel Pipe", steelIngot, 1.5);
+        Item steelBeam = new Item("Steel Beam",steelIngot,4.0);
+        Item versatileFramework = new Item("Versatile Framework", new Item[]{modularFrame,steelBeam}, new Double[]{0.5, 6.0d});
+
+        //SPECIAL
+        Item xenoZapper = new Item("Xeno Zapper",new Item[]{ironRod,reinforcedIronPlate,cable,wire},new Double[]{10.0,2.0,15.0,50.0});
+
+
+
+        versatileFramework.printRecipe(0,10);
+
+
     }
 
 }
