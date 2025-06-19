@@ -1,3 +1,8 @@
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Scanner;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
@@ -19,38 +24,60 @@ public class Main {
             "\u001B[96m", // Bright Cyan
             "\u001B[97m", // Bright White
     };
-    public static void main(String[] args) {
+    static Scanner scanner = new Scanner(System.in);
 
+    public static void main(String[] args) {
+        HashMap<String,Item> items = new HashMap<>();
         //IRON RELATED
-        Item ironOre = new Item("Iron Ore");
-        Item ironIngot = new Item("Iron Ingot",ironOre,1.0);
-        Item ironPlate = new Item("Iron Plate",ironIngot,1.5);
-        Item ironRod = new Item("Iron Rod",ironIngot,1.0);
-        Item portableMiner = new Item("Portable Miner",new Item[]{ironPlate,ironRod},new Double[]{2.0,4.0});
-        Item screws = new Item("Screws",ironRod,0.25);
-        Item reinforcedIronPlate = new Item("Reinforced Iron Plate",new Item[]{ironPlate,screws},new Double[]{6.0,12.0});
-        Item modularFrame = new Item("Modular Frame", new Item[]{reinforcedIronPlate, ironRod}, new Double[]{3.0, 12.0});
-        Item rotor = new Item("Rotor", new Item[]{ironRod, screws}, new Double[]{5.0, 25.0});
+        items.put("Iron Ore", new Item("Iron Ore"));
+        items.put("Iron Ingot", new Item("Iron Ingot", items.get("Iron Ore"), 1.0));
+        items.put("Iron Plate", new Item("Iron Plate", items.get("Iron Ingot"), 1.5));
+        items.put("Iron Rod", new Item("Iron Rod", items.get("Iron Ingot"), 1.0));
+        items.put("Portable Miner", new Item("Portable Miner", new Item[]{items.get("Iron Plate"), items.get("Iron Rod")}, new Double[]{2.0, 4.0}));
+        items.put("Screws", new Item("Screws", items.get("Iron Rod"), 0.25));
+        items.put("Reinforced Iron Plate", new Item("Reinforced Iron Plate", new Item[]{items.get("Iron Plate"), items.get("Screws")}, new Double[]{6.0, 12.0}));
+        items.put("Modular Frame", new Item("Modular Frame", new Item[]{items.get("Reinforced Iron Plate"), items.get("Iron Rod")}, new Double[]{3.0, 12.0}));
+        items.put("Rotor", new Item("Rotor", new Item[]{items.get("Iron Rod"), items.get("Screws")}, new Double[]{5.0, 25.0}));
+        items.put("Smart Plating", new Item("Smart Plating", new Item[]{items.get("Reinforced Iron Plate"), items.get("Rotor")}, new Double[]{1.0, 1.0}));
 
         //COPPER RELATED
-        Item copperOre = new Item("Copper Ore");
-        Item copperIngot = new Item("Copper Ingot",copperOre,1.0);
-        Item wire = new Item("Copper Wire",copperIngot,0.5);
-        Item cable = new Item("Cable",wire,2.0);
+        items.put("Copper Ore", new Item("Copper Ore"));
+        items.put("Copper Ingot", new Item("Copper Ingot", items.get("Copper Ore"), 1.0));
+        items.put("Copper Wire", new Item("Copper Wire", items.get("Copper Ingot"), 0.5));
+        items.put("Cable", new Item("Cable", items.get("Copper Wire"), 2.0));
+        items.put("Copper Sheet", new Item("Copper Sheet", items.get("Copper Ingot"), 2.0));
+
+        //LIMESTONE RELATED
+        items.put("Limestone", new Item("Limestone"));
+        items.put("Concrete", new Item("Concrete", items.get("Limestone"), 3.0));
 
         //STEEL
-        Item coal = new Item("Coal");
-        Item steelIngot = new Item("Steel Ingot", new Item[]{ironOre, coal}, new Double[]{1.0,1.0});
-        Item steelPipe = new Item("Steel Pipe", steelIngot, 1.5);
-        Item steelBeam = new Item("Steel Beam",steelIngot,4.0);
-        Item versatileFramework = new Item("Versatile Framework", new Item[]{modularFrame,steelBeam}, new Double[]{0.5, 6.0d});
+        items.put("Coal", new Item("Coal"));
+        items.put("Steel Ingot", new Item("Steel Ingot", new Item[]{items.get("Iron Ore"), items.get("Coal")}, new Double[]{1.0, 1.0}));
+        items.put("Steel Pipe", new Item("Steel Pipe", items.get("Steel Ingot"), 1.5));
+        items.put("Steel Beam", new Item("Steel Beam", items.get("Steel Ingot"), 4.0));
+        items.put("Versatile Framework", new Item("Versatile Framework", new Item[]{items.get("Modular Frame"), items.get("Steel Beam")}, new Double[]{0.5, 6.0d}));
 
         //SPECIAL
-        Item xenoZapper = new Item("Xeno Zapper",new Item[]{ironRod,reinforcedIronPlate,cable,wire},new Double[]{10.0,2.0,15.0,50.0});
+        items.put("Xeno Zapper", new Item("Xeno Zapper", new Item[]{items.get("Iron Rod"), items.get("Reinforced Iron Plate"), items.get("Cable"), items.get("Copper Wire")}, new Double[]{10.0, 2.0, 15.0, 50.0}));
+
+        //TIER 4
+        items.put("Stator", new Item("Stator", new Item[]{items.get("Steel Pipe"), items.get("Copper Wire")}, new Double[]{3.0, 8.0}));
+        items.put("Automated Wiring", new Item("Automated Wiring", new Item[]{items.get("Stator"), items.get("Cable")}, new Double[]{1.0, 20.0}));
+        items.put("Motor", new Item("Motor", new Item[]{items.get("Rotor"), items.get("Stator")}, new Double[]{2.0, 2.0}));
+        items.put("Encased Industrial Beam", new Item("Encased Industrial Beam", new Item[]{items.get("Steel Beam"), items.get("Concrete")}, new Double[]{3.0, 6.0}));
 
 
-
-        versatileFramework.printRecipe(0,10);
+        //automatedWiring.printRecipe(100);
+        String input;
+        while (true) {
+            System.out.println("\n\u001B[32m[product],[amount]->");
+            input= scanner.nextLine();
+            if (input.isEmpty()) break;
+            String product = Arrays.stream(input.split(",")[0].strip().split(" ")).map(s-> s.substring(0,1).toUpperCase()+s.substring(1)).reduce((a, b)->a+" "+b).get();
+            int amount = Integer.parseInt(input.split(",")[1].strip());
+            items.get(product).printRecipe(amount);
+        }
 
 
     }
