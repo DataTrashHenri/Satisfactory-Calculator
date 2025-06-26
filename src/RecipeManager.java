@@ -112,18 +112,29 @@ public class RecipeManager {
 
     public void printRecipe(Recipe recipe,double amount,int depth) {
         simulateDepth(depth);
-        System.out.println("< "+amount+"x "+recipe.products.stream().map(product -> product.name).collect(java.util.stream.Collectors.joining(", "))+">"+" :");
+        printDefault(amount,recipe);
         for (Product ingredient : recipe.ingredients) {
             if (this.getRecipe(ingredient.name)==null) {
+                ResourceMap.addResource(ingredient.name,ingredient.amount*amount);
                 simulateDepth(depth+1);
-                System.out.println(amount* ingredient.amount+"x -"+ingredient.name+"-");
+                printRaw(amount,ingredient);
             } else {
                 printRecipe(this.recipes.get(ingredient.name),amount*ingredient.amount,depth+1);
             }
         }
     }
-
+    private void printDefault(double amount,Recipe recipe) {
+        System.out.println("< "+ResourceMap.df.format(amount)+"x "+recipe.products.stream().map(product -> product.name).collect(java.util.stream.Collectors.joining(", "))+">"+" :");
+    }
+    private void printRaw(double amount,Product ingredient) {
+        System.out.println(ResourceMap.df.format(amount* ingredient.amount)+"x -"+ingredient.name+"-");
+    }
     public void printRecipe(String recipe, int amount) {
+        System.out.println("--------------------------");
+        printRecipe(getRecipe(recipe),amount,0);
+    }
+    public void printRecipe(String recipe, double amount) {
+        System.out.println("--------------------------");
         printRecipe(getRecipe(recipe),amount,0);
     }
     private void simulateDepth(int depth) {
