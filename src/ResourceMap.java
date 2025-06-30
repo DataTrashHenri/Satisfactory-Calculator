@@ -2,20 +2,24 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class ResourceMap {
-    private static final HashMap<String,Double> resources = new HashMap<>();
-    public static DecimalFormat df = new DecimalFormat("#,###.##");
-    public static void addResource(String name,double amount) {
+    private final HashMap<String,Double> resources;
+    private final DecimalFormat df;
+    public ResourceMap() {
+        this.resources = new HashMap<>();
+        this.df = new DecimalFormat("#,###.##");
+    }
+    public void addResource(String name,double amount) {
         resources.put(name,amount+(resources.get(name)==null?0:resources.get(name)));
     }
-    public static void flush(){
+    public void flush(){
         resources.clear();
     }
-    public static void print(){
+    public void print(){
         System.out.println("--------------------------\nTotal raw Resources :\n");
         for (String key : resources.keySet()) {
             System.out.println(key+" : "+df.format(resources.get(key)));
         }
-        ResourceMap.flush();
+        this.flush();
         System.out.println("--------------------------");
     }
 }

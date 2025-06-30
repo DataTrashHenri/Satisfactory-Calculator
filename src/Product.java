@@ -10,8 +10,7 @@ public class Product {
         this.amount = 1;
     }
     public Product(String name, int amount) {
-        this.name = name;
-        this.amount = amount;
+        this(name, (double) amount);
     }
 
 }

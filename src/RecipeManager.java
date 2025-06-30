@@ -1,12 +1,17 @@
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
 public class RecipeManager {
 
     HashMap<String,Recipe> recipes;
+    private final ResourceMap resourceMap;
+    private final DecimalFormat df;
 
     public RecipeManager() {
         this.recipes = new HashMap<>();
+        this.resourceMap = new ResourceMap();
+        this.df = new DecimalFormat("#,###.##");
         loadRecipes();
     }
     private void loadRecipes() {
@@ -115,7 +120,7 @@ public class RecipeManager {
         printDefault(amount,recipe);
         for (Product ingredient : recipe.ingredients) {
             if (this.getRecipe(ingredient.name)==null) {
-                ResourceMap.addResource(ingredient.name,ingredient.amount*amount);
+                resourceMap.addResource(ingredient.name,ingredient.amount*amount);
                 simulateDepth(depth+1);
                 printRaw(amount,ingredient);
             } else {
@@ -124,10 +129,10 @@ public class RecipeManager {
         }
     }
     private void printDefault(double amount,Recipe recipe) {
-        System.out.println("< "+ResourceMap.df.format(amount)+"x "+recipe.products.stream().map(product -> product.name).collect(java.util.stream.Collectors.joining(", "))+">"+" :");
+        System.out.println("< "+df.format(amount)+"x "+recipe.products.stream().map(product -> product.name).collect(java.util.stream.Collectors.joining(", "))+">"+" :");
     }
     private void printRaw(double amount,Product ingredient) {
-        System.out.println(ResourceMap.df.format(amount* ingredient.amount)+"x -"+ingredient.name+"-");
+        System.out.println(df.format(amount* ingredient.amount)+"x -"+ingredient.name+"-");
     }
     public void printRecipe(String recipe, int amount) {
         System.out.println("--------------------------");
@@ -141,6 +146,9 @@ public class RecipeManager {
         for (int i = 0; i < depth; i++) {
             System.out.print("   |");
         }
+    }
+    public void printResources() {
+        resourceMap.print();
     }
 
 }

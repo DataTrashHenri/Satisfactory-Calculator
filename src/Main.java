@@ -3,6 +3,6 @@ public class Main {
     public static void main(String[] args) {
         rm = new RecipeManager();
         rm.printRecipe("Modular Engine",50);
-        ResourceMap.print();
+        rm.printResources();
     }
 }
